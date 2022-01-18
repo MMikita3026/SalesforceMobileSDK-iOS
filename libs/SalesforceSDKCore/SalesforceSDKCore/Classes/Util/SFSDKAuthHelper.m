@@ -37,6 +37,7 @@
 #import "SFSecurityLockout.h"
 #import "SFApplicationHelper.h"
 #import <SalesforceSDKCore/SalesforceSDKCore-Swift.h>
+#import <SalesforceSDKCommon/SFSDKReachability.h>
 
 @implementation SFSDKAuthHelper
 
@@ -51,8 +52,15 @@
             completionBlock();
         }
     }];
+ 
+    SFSDKReachability *reachability = [SFSDKReachability reachabilityForInternetConnection];
+    SFSDKReachabilityNetworkStatus networkStatus = [reachability currentReachabilityStatus];
 
-    if (![SFUserAccountManager sharedInstance].currentUser && [SalesforceSDKManager sharedManager].appConfig.shouldAuthenticate) {
+    if (
+    ![SFUserAccountManager sharedInstance].currentUser
+    && [SalesforceSDKManager sharedManager].appConfig.shouldAuthenticate
+    && networkStatus != SFSDKReachabilityNotReachable
+    ) {
         SFUserAccountManagerFailureCallbackBlock failureBlock = ^(SFOAuthInfo *authInfo, NSError *authError) {
             [SFSDKCoreLogger e:[self class] format:@"Authentication failed: %@.", [authError localizedDescription]];
         };
