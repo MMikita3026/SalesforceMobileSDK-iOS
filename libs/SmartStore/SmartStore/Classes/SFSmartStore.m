@@ -24,7 +24,7 @@
 
 //required for UIApplicationProtectedDataDidBecomeAvailable
 #import <UIKit/UIKit.h>
-#import "sqlite3.h"
+#import <sqlite3.h>
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
 #import "FMDatabaseQueue.h"
